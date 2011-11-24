@@ -1,0 +1,16 @@
+{
+  "name": "passport-readability",
+  "version": "0.1.0",
+  "description": "Readability authentication strategy for Passport.",
+  "author": "Jared Hanson <jaredhanson@gmail.com> (http://www.jaredhanson.net/)",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/jaredhanson/passport-readability.git"
+  },
+  "main": "./lib/passport-readability",
+  "dependencies": {
+    "passport-oauth": ">= 0.1.0"
+  },
+  "engines": { "node": ">= 0.4.0" },
+  "keywords": ["passport", "readability", "auth", "authn", "authentication", "identity"]
+}
