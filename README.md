@@ -3,6 +3,57 @@
 [Passport](https://github.com/jaredhanson/passport) strategy for authenticating
 with Readability using the OAuth 1.0a API.
 
+## Installation
+
+    $ npm install passport-readability
+
+## Usage
+
+#### Configure Strategy
+
+The Readability authentication strategy authenticates users using a Readability
+account and OAuth tokens.  The strategy requires a `verify` callback, which
+accepts these credentials and calls `done` providing a user, as well as
+`options` specifying a consumer key, consumer secret, and callback URL.
+
+    passport.use(new ReadabilityStrategy({
+        consumerKey: READABILITY_API_KEY,
+        consumerSecret: READABILITY_API_SECRET,
+        callbackURL: "http://127.0.0.1:3000/auth/readability/callback"
+      },
+      function(token, tokenSecret, profile, done) {
+        User.findOrCreate({ readabilityId: profile.id }, function (err, user) {
+          return done(err, user);
+        });
+      }
+    ));
+
+#### Authenticate Requests
+
+Use `passport.authenticate()`, specifying the `'readability'` strategy, to
+authenticate requests.
+
+For example, as route middleware in an [Express](http://expressjs.com/)
+application:
+
+    app.get('/auth/readability',
+      passport.authenticate('readability'),
+      function(req, res){
+        // The request will be redirected to Readability for authentication, so
+        // this function will not be called.
+      });
+    
+    app.get('/auth/readability/callback', 
+      passport.authenticate('readability', { failureRedirect: '/login' }),
+      function(req, res) {
+        // Successful authentication, redirect home.
+        res.redirect('/');
+      });
+
+#### Examples
+
+For a complete, working example, refer to the [login example](https://github.com/jaredhanson/passport-readability/tree/master/examples/login).
+
 ## Credits
 
   - [Jared Hanson](http://github.com/jaredhanson)
