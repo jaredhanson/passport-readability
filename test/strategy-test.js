@@ -55,6 +55,7 @@ vows.describe('ReadabilityStrategy').addBatch({
       },
       'should load profile' : function(err, profile) {
         assert.equal(profile.provider, 'readability');
+        assert.equal(profile.username, 'jdoe');
         assert.equal(profile.displayName, 'John Doe');
         assert.equal(profile.name.familyName, 'Doe');
         assert.equal(profile.name.givenName, 'John');
@@ -95,6 +96,44 @@ vows.describe('ReadabilityStrategy').addBatch({
       },
       'should not load profile' : function(err, profile) {
         assert.isUndefined(profile);
+      },
+    },
+  },
+  
+  'strategy handling a request that has been denied': {
+    topic: function() {
+      var strategy = new ReadabilityStrategy({
+          consumerKey: 'ABC123',
+          consumerSecret: 'secret'
+        },
+        function() {}
+      );
+      return strategy;
+    },
+    
+    'after augmenting with actions': {
+      topic: function(strategy) {
+        var self = this;
+        var req = {};
+        strategy.success = function(user) {
+          self.callback(new Error('should not be called'));
+        }
+        strategy.fail = function() {
+          self.callback(null, req);
+        }
+        
+        req.query = {};
+        req.query.error = 'Access not granted by user.';
+        process.nextTick(function () {
+          strategy.authenticate(req);
+        });
+      },
+      
+      'should not call success' : function(err, req) {
+        assert.isNull(err);
+      },
+      'should call fail' : function(err, req) {
+        assert.isNotNull(req);
       },
     },
   },
