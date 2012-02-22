@@ -60,6 +60,12 @@ vows.describe('ReadabilityStrategy').addBatch({
         assert.equal(profile.name.familyName, 'Doe');
         assert.equal(profile.name.givenName, 'John');
       },
+      'should set raw property' : function(err, profile) {
+        assert.isString(profile._raw);
+      },
+      'should set json property' : function(err, profile) {
+        assert.isObject(profile._json);
+      },
     },
   },
   
